@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Minha Pokedex</title>
+
+<style>
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#f6f8fc,#e9eef6);
+    margin:0;
+}
+
+header{
+    background:#ef5350;
+    padding:20px 40px;
+    color:white;
+    font-size:28px;
+    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.search-box input{
+    padding:8px 14px;
+    border-radius:20px;
+    border:none;
+    outline:none;
+    font-size:14px;
+}
+
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:30px;
+}
+
+.card{
+    background:white;
+    width:220px;
+    border-radius:14px;
+    margin:15px;
+    padding:20px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.15);
+    transition:0.2s;
+    text-align:center;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+}
+
+.pokemon-img{
+    width:140px;
+}
+
+.nome{
+    font-size:20px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.id{
+    color:gray;
+    font-size:13px;
+}
+
+.tipo{
+    margin-top:8px;
+    font-weight:bold;
+}
+
+.stats{
+    margin-top:10px;
+    font-size:14px;
+}
+
+.loading{
+    margin-top:30px;
+    font-size:18px;
+    text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+Minha Pokedex
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Buscar Pokemon...">
+</div>
+
+</header>
+
+<div class="loading" id="loading">
+Carregando Pokemon...
+</div>
+
+<div class="container" id="pokemonContainer"></div>
+
+<script>
+
+const container=document.getElementById("pokemonContainer");
+const loading=document.getElementById("loading");
+const searchInput=document.getElementById("searchInput");
+
+let todosPokemons=[];
+
+function renderizarPokemons(pokemons){
+
+container.innerHTML="";
+
+pokemons.forEach(pokemon=>{
+
+const card=document.createElement("div");
+card.classList.add("card");
+
+card.innerHTML=`
+
+<img class="pokemon-img"
+src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png">
+
+<div class="nome">${pokemon.nome}</div>
+
+<div class="id">#${pokemon.id}</div>
+
+<div class="tipo">
+Tipo: ${pokemon.tipo1 || ""} ${pokemon.tipo2 || ""}
+</div>
+
+<div class="stats">
+HP: ${pokemon.hp}<br>
+Attack: ${pokemon.attack}<br>
+Defense: ${pokemon.defense}<br>
+Speed: ${pokemon.speed}
+</div>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+fetch("http://localhost:3000/pokemons")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+todosPokemons=data;
+
+loading.style.display="none";
+
+renderizarPokemons(data);
+
+})
+
+.catch(error=>{
+
+loading.innerText="Erro ao carregar Pokemon";
+
+console.error(error);
+
+});
+
+searchInput.addEventListener("input",()=>{
+
+const texto=searchInput.value.toLowerCase();
+
+const filtrados=todosPokemons.filter(pokemon=>
+pokemon.nome.toLowerCase().includes(texto)
+);
+
+renderizarPokemons(filtrados);
+
+});
+
+</script>
+
+</body>
+</html>
