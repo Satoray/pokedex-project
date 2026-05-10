@@ -1,138 +1,516 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Pokedex</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
-body{
-font-family:'Inter',sans-serif;
+*{
 margin:0;
-background:#0f172a;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Inter',sans-serif;
+
+background:
+radial-gradient(circle at top,#2e1065,#020617 75%);
+
 color:white;
+
+min-height:100vh;
+
+overflow-x:hidden;
+
+}
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+inset:0;
+
+background:
+
+linear-gradient(rgba(168,85,247,0.06) 1px,transparent 1px),
+linear-gradient(90deg,rgba(168,85,247,0.06) 1px,transparent 1px);
+
+background-size:40px 40px;
+
+z-index:-2;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:700px;
+height:700px;
+
+background:
+radial-gradient(circle,#a855f744,transparent 70%);
+
+top:-200px;
+right:-200px;
+
+filter:blur(70px);
+
+z-index:-1;
+
 }
 
 header{
+
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
-padding:20px 40px;
-background:#111827;
-border-bottom:1px solid #1f2937;
+
+padding:24px 40px;
+
+background:rgba(15,23,42,0.8);
+
+backdrop-filter:blur(18px);
+
+border-bottom:1px solid #a855f755;
+
+position:sticky;
+
+top:0;
+
+z-index:999;
+
 }
 
 header h1{
-margin:0;
-font-weight:600;
+
+font-family:'Orbitron',sans-serif;
+
+font-size:34px;
+
+letter-spacing:3px;
+
+color:#d8b4fe;
+
+text-shadow:
+0 0 10px #c084fc,
+0 0 25px #9333ea;
+
 }
 
-.search-box input{
-padding:10px 16px;
-border-radius:8px;
-border:none;
-background:#1f2937;
-color:white;
-outline:none;
-width:200px;
+.controls{
+
+display:flex;
+
+gap:12px;
+
+flex-wrap:wrap;
+
 }
 
+.search-box input,
 select{
-padding:10px;
-border-radius:8px;
-background:#1f2937;
+
+padding:12px 16px;
+
+border-radius:14px;
+
+border:1px solid #9333ea55;
+
+background:#111827;
+
 color:white;
-border:none;
+
+outline:none;
+
+font-family:'Orbitron',sans-serif;
+
+transition:0.3s;
+
+box-shadow:
+0 0 10px #9333ea22;
+
 }
 
-/* CONTAINER */
+.search-box input:focus,
+select:focus{
+
+transform:scale(1.03);
+
+border:1px solid #c084fc;
+
+box-shadow:
+0 0 18px #9333eaaa;
+
+}
 
 .container{
+
 display:grid;
-grid-template-columns:repeat(auto-fill,260px);
-gap:30px;
-padding:40px;
+
+grid-template-columns:
+repeat(auto-fill,300px);
+
+gap:35px;
+
+padding:45px;
+
 justify-content:center;
+
 }
 
-/* CARD */
-
 .card{
-background:#1f2937;
-border-radius:16px;
-padding:20px;
-text-align:center;
-transition:0.25s;
-box-shadow:0 10px 25px rgba(0,0,0,0.4);
+
+position:relative;
+
+background:
+linear-gradient(
+145deg,
+rgba(30,27,75,0.95),
+rgba(2,6,23,0.98)
+);
+
+border-radius:28px;
+
+padding:24px;
+
+overflow:hidden;
+
+transition:0.35s;
+
+backdrop-filter:blur(10px);
+
+}
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+background:
+linear-gradient(
+130deg,
+transparent,
+rgba(192,132,252,0.08),
+transparent
+);
+
+transform:translateX(-100%);
+
+transition:0.8s;
+
+}
+
+.card:hover::before{
+transform:translateX(100%);
 }
 
 .card:hover{
-transform:translateY(-8px) scale(1.03);
+
+transform:
+translateY(-12px)
+scale(1.03);
+
 }
 
 .pokemon-img{
-width:160px;
-transition:0.3s;
+
+width:180px;
+
+transition:0.35s;
+
+filter:
+drop-shadow(0 0 18px rgba(168,85,247,0.4));
+
 }
 
 .card:hover .pokemon-img{
-transform:scale(1.1);
+
+transform:
+scale(1.12)
+rotate(-2deg);
+
+filter:
+drop-shadow(0 0 35px rgba(192,132,252,0.95));
+
 }
 
 .nome{
-font-size:22px;
-font-weight:600;
+
+font-family:'Orbitron',sans-serif;
+
+font-size:24px;
+
 margin-top:10px;
+
+letter-spacing:1px;
+
+text-shadow:
+0 0 10px rgba(192,132,252,0.5);
+
 }
 
 .id{
+
+margin-top:5px;
+
 font-size:13px;
-color:#9ca3af;
+
+color:#cbd5e1;
+
 }
 
-.tipo{
-margin-top:10px;
-display:inline-block;
-background:#374151;
-padding:6px 12px;
-border-radius:8px;
-font-size:13px;
+.tipos{
+
+display:flex;
+
+justify-content:center;
+
+gap:8px;
+
+margin-top:15px;
+
+flex-wrap:wrap;
+
+}
+
+.badge{
+
+padding:8px 14px;
+
+border-radius:999px;
+
+font-size:11px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+color:white;
+
+box-shadow:
+0 0 12px rgba(255,255,255,0.15);
+
 }
 
 .stats{
-margin-top:14px;
-background:#111827;
-padding:12px;
-border-radius:10px;
+
+margin-top:18px;
+
+background:#020617;
+
+padding:15px;
+
+border-radius:18px;
+
+border:1px solid #9333ea33;
+
+}
+
+.stat{
+
+margin-bottom:14px;
+
+}
+
+.stat-top{
+
+display:flex;
+
+justify-content:space-between;
+
 font-size:13px;
-line-height:1.6;
+
+margin-bottom:6px;
+
+font-family:'Orbitron',sans-serif;
+
+}
+
+.bar{
+
+height:10px;
+
+background:#111827;
+
+border-radius:999px;
+
+overflow:hidden;
+
+}
+
+.fill{
+
+height:100%;
+
+border-radius:999px;
+
+box-shadow:
+0 0 12px currentColor;
+
+}
+
+.vantagens{
+
+margin-top:18px;
+
+padding:15px;
+
+border-radius:18px;
+
+background:#020617;
+
+border:1px solid #9333ea33;
+
+}
+
+.vantagens h4{
+
+font-family:'Orbitron',sans-serif;
+
+font-size:12px;
+
+letter-spacing:1px;
+
+margin-bottom:10px;
+
+margin-top:12px;
+
+color:#d8b4fe;
+
+}
+
+.type-list{
+
+display:flex;
+
+gap:7px;
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+}
+
+.mini-badge{
+
+padding:6px 10px;
+
+border-radius:999px;
+
+font-size:10px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+transition:0.2s;
+
+color:white;
+
+}
+
+.mini-badge:hover{
+
+transform:scale(1.08);
+
+filter:brightness(1.2);
+
 }
 
 .loading{
+
 text-align:center;
-margin-top:50px;
-font-size:18px;
+
+margin-top:100px;
+
+font-family:'Orbitron',sans-serif;
+
+font-size:22px;
+
+letter-spacing:2px;
+
+color:#d8b4fe;
+
+text-shadow:
+0 0 12px #9333ea;
+
+}
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#9333ea;
+border-radius:999px;
+}
+
+@media(max-width:700px){
+
+header{
+
+flex-direction:column;
+
+gap:20px;
+
+padding:20px;
+
+}
+
+.container{
+
+grid-template-columns:1fr;
+
+padding:20px;
+
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
 
-<h1>Pokedex</h1>
+<h1>POKEDEX</h1>
 
-<div style="display:flex; gap:10px;">
+<div class="controls">
 
 <div class="search-box">
-<input type="text" id="searchInput" placeholder="Buscar Pokemon...">
+<input type="text" id="searchInput" placeholder="Buscar Pokémon">
 </div>
 
 <select id="typeFilter">
+
 <option value="">Todos</option>
+
+<option value="Legendary">✨ Lendários</option>
+
 <option value="Grass">Grass</option>
 <option value="Fire">Fire</option>
 <option value="Water">Water</option>
@@ -151,6 +529,7 @@ font-size:18px;
 <option value="Bug">Bug</option>
 <option value="Ghost">Ghost</option>
 <option value="Steel">Steel</option>
+
 </select>
 
 </div>
@@ -158,7 +537,7 @@ font-size:18px;
 </header>
 
 <div class="loading" id="loading">
-Carregando Pokemon...
+CARREGANDO POKÉMONS...
 </div>
 
 <div class="container" id="pokemonContainer"></div>
@@ -172,33 +551,242 @@ const typeFilter=document.getElementById("typeFilter");
 
 let todosPokemons=[];
 
+const legendaryPokemons=[
+
+"Articuno",
+"Zapdos",
+"Moltres",
+"Mewtwo",
+"Mew",
+"Raikou",
+"Entei",
+"Suicune",
+"Lugia",
+"Ho-Oh",
+"Celebi",
+"Kyogre",
+"Groudon",
+"Rayquaza",
+"Dialga",
+"Palkia",
+"Giratina",
+"Darkrai",
+"Arceus",
+"Reshiram",
+"Zekrom",
+"Kyurem",
+"Xerneas",
+"Yveltal",
+"Zygarde",
+"Solgaleo",
+"Lunala",
+"Necrozma",
+"Zacian",
+"Zamazenta",
+"Eternatus",
+"Koraidon",
+"Miraidon"
+
+];
+
+const typeColors={
+
+Fire:"#ff4d6d",
+Water:"#38bdf8",
+Grass:"#22c55e",
+Electric:"#facc15",
+Psychic:"#ec4899",
+Ice:"#67e8f9",
+Dragon:"#8b5cf6",
+Dark:"#475569",
+Fairy:"#f9a8d4",
+Normal:"#9ca3af",
+Fighting:"#ef4444",
+Flying:"#60a5fa",
+Poison:"#a855f7",
+Ground:"#d97706",
+Rock:"#78716c",
+Bug:"#84cc16",
+Ghost:"#7c3aed",
+Steel:"#94a3b8"
+
+};
+
+const typeAdvantages={
+
+Fire:{strong:["Grass","Ice","Bug","Steel"],weak:["Water","Ground","Rock"]},
+Water:{strong:["Fire","Ground","Rock"],weak:["Electric","Grass"]},
+Grass:{strong:["Water","Ground","Rock"],weak:["Fire","Ice","Poison","Flying","Bug"]},
+Electric:{strong:["Water","Flying"],weak:["Ground"]},
+Psychic:{strong:["Fighting","Poison"],weak:["Bug","Ghost","Dark"]},
+Ice:{strong:["Grass","Ground","Flying","Dragon"],weak:["Fire","Fighting","Rock","Steel"]},
+Dragon:{strong:["Dragon"],weak:["Ice","Dragon","Fairy"]},
+Dark:{strong:["Psychic","Ghost"],weak:["Fighting","Bug","Fairy"]},
+Fairy:{strong:["Dragon","Fighting","Dark"],weak:["Poison","Steel"]},
+Normal:{strong:[],weak:["Fighting"]},
+Fighting:{strong:["Normal","Rock","Steel","Ice","Dark"],weak:["Flying","Psychic","Fairy"]},
+Flying:{strong:["Grass","Fighting","Bug"],weak:["Electric","Ice","Rock"]},
+Poison:{strong:["Grass","Fairy"],weak:["Ground","Psychic"]},
+Ground:{strong:["Fire","Electric","Poison","Rock","Steel"],weak:["Water","Grass","Ice"]},
+Rock:{strong:["Fire","Ice","Flying","Bug"],weak:["Water","Grass","Fighting","Ground","Steel"]},
+Bug:{strong:["Grass","Psychic","Dark"],weak:["Fire","Flying","Rock"]},
+Ghost:{strong:["Psychic","Ghost"],weak:["Ghost","Dark"]},
+Steel:{strong:["Ice","Rock","Fairy"],weak:["Fire","Fighting","Ground"]}
+
+};
+
+function criarBarra(valor,cor){
+
+return `
+<div class="bar">
+<div class="fill"
+style="
+width:${valor}%;
+background:${cor};
+color:${cor};
+">
+</div>
+</div>
+`;
+
+}
+
 function renderizarPokemons(pokemons){
 
 container.innerHTML="";
 
 pokemons.forEach(pokemon=>{
 
+const cor=typeColors[pokemon.tipo1] || "#a855f7";
+
+const fortes=
+typeAdvantages[pokemon.tipo1]?.strong || [];
+
+const fracos=
+typeAdvantages[pokemon.tipo1]?.weak || [];
+
 const card=document.createElement("div");
+
 card.classList.add("card");
 
+card.style.border=`1px solid ${cor}`;
+card.style.boxShadow=`0 0 30px ${cor}55`;
+
 card.innerHTML=`
+
+<div style="text-align:center;">
 
 <img class="pokemon-img"
 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png">
 
-<div class="nome">${pokemon.nome}</div>
+<div class="nome">
+${pokemon.nome}
+</div>
 
-<div class="id">#${pokemon.id}</div>
+<div class="id">
+#${pokemon.id}
+</div>
 
-<div class="tipo">
-${pokemon.tipo1 || ""} ${pokemon.tipo2 || ""}
+<div class="tipos">
+
+<span class="badge"
+style="background:${typeColors[pokemon.tipo1]}">
+${pokemon.tipo1}
+</span>
+
+${pokemon.tipo2 ?
+`
+<span class="badge"
+style="background:${typeColors[pokemon.tipo2]}">
+${pokemon.tipo2}
+</span>
+`
+:""}
+
+</div>
+
 </div>
 
 <div class="stats">
-HP: ${pokemon.hp}<br>
-Attack: ${pokemon.attack}<br>
-Defense: ${pokemon.defense}<br>
-Speed: ${pokemon.speed}
+
+<div class="stat">
+
+<div class="stat-top">
+<span>HP</span>
+<span>${pokemon.hp}</span>
+</div>
+
+${criarBarra(pokemon.hp,"#22c55e")}
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>ATK</span>
+<span>${pokemon.attack}</span>
+</div>
+
+${criarBarra(pokemon.attack,"#ef4444")}
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>DEF</span>
+<span>${pokemon.defense}</span>
+</div>
+
+${criarBarra(pokemon.defense,"#3b82f6")}
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>SPD</span>
+<span>${pokemon.speed}</span>
+</div>
+
+${criarBarra(pokemon.speed,"#facc15")}
+
+</div>
+
+</div>
+
+<div class="vantagens">
+
+<h4>◉ FORTE CONTRA</h4>
+
+<div class="type-list">
+
+${fortes.map(tipo=>`
+
+<span class="mini-badge"
+style="background:${typeColors[tipo]}">
+${tipo}
+</span>
+
+`).join("")}
+
+</div>
+
+<h4>◉ FRACO CONTRA</h4>
+
+<div class="type-list">
+
+${fracos.map(tipo=>`
+
+<span class="mini-badge"
+style="background:${typeColors[tipo]}">
+${tipo}
+</span>
+
+`).join("")}
+
+</div>
+
 </div>
 
 `;
@@ -211,17 +799,34 @@ container.appendChild(card);
 
 function aplicarFiltros(){
 
-const texto=searchInput.value.toLowerCase();
-const tipoSelecionado=typeFilter.value;
+const texto=
+searchInput.value.toLowerCase();
 
-const filtrados=todosPokemons.filter(pokemon=>{
+const tipo=
+typeFilter.value;
 
-const matchNome=pokemon.nome.toLowerCase().includes(texto);
+const filtrados=
+todosPokemons.filter(pokemon=>{
 
-const matchTipo=
-tipoSelecionado==="" ||
-pokemon.tipo1===tipoSelecionado ||
-pokemon.tipo2===tipoSelecionado;
+const matchNome=
+pokemon.nome.toLowerCase()
+.includes(texto);
+
+let matchTipo=false;
+
+if(tipo==="Legendary"){
+
+matchTipo=
+legendaryPokemons.includes(pokemon.nome);
+
+}else{
+
+matchTipo=
+tipo==="" ||
+pokemon.tipo1===tipo ||
+pokemon.tipo2===tipo;
+
+}
 
 return matchNome && matchTipo;
 
@@ -247,14 +852,18 @@ renderizarPokemons(data);
 
 .catch(error=>{
 
-loading.innerText="Erro ao carregar Pokemon";
+loading.innerText=
+"ERRO AO CARREGAR";
 
 console.error(error);
 
 });
 
-searchInput.addEventListener("input",aplicarFiltros);
-typeFilter.addEventListener("change",aplicarFiltros);
+searchInput
+.addEventListener("input",aplicarFiltros);
+
+typeFilter
+.addEventListener("change",aplicarFiltros);
 
 </script>
 
