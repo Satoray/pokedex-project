@@ -467,6 +467,161 @@ background:#9333ea;
 border-radius:999px;
 }
 
+#btnFavoritos,
+#btnTodos{
+
+padding:12px 16px;
+
+border:none;
+
+border-radius:14px;
+
+background:#9333ea;
+
+color:white;
+
+cursor:pointer;
+
+font-family:'Orbitron',sans-serif;
+
+transition:0.3s;
+
+box-shadow:
+0 0 10px #9333ea55;
+
+}
+
+#btnFavoritos:hover,
+#btnTodos:hover{
+
+transform:scale(1.05);
+
+}
+
+#loginScreen{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+background:
+radial-gradient(circle at top,#2e1065,#020617 75%);
+
+z-index:9999;
+
+}
+
+.login-box{
+
+width:350px;
+
+padding:30px;
+
+border-radius:25px;
+
+background:
+rgba(15,23,42,0.9);
+
+backdrop-filter:blur(15px);
+
+border:1px solid #9333ea;
+
+box-shadow:
+0 0 30px #9333ea55;
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.login-box h1{
+
+text-align:center;
+
+font-family:'Orbitron',sans-serif;
+
+color:#d8b4fe;
+
+margin-bottom:15px;
+
+}
+
+.login-box input{
+
+padding:12px;
+
+border:none;
+
+border-radius:12px;
+
+background:#111827;
+
+color:white;
+
+outline:none;
+
+}
+
+.login-box button{
+
+padding:12px;
+
+border:none;
+
+border-radius:12px;
+
+background:#9333ea;
+
+color:white;
+
+font-family:'Orbitron',sans-serif;
+
+cursor:pointer;
+
+}
+
+.senha-container{
+
+display:flex;
+
+gap:10px;
+
+}
+
+.senha-container button{
+
+width:60px;
+
+border:none;
+
+border-radius:12px;
+
+background:#9333ea;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+#app{
+
+display:none;
+
+}
+
 @media(max-width:700px){
 
 header{
@@ -494,6 +649,42 @@ padding:20px;
 </head>
 
 <body>
+
+<div id="loginScreen">
+
+<div class="login-box">
+
+<h1>POKEDEX</h1>
+
+<input
+type="text"
+id="usuario"
+placeholder="Usuário">
+
+<div class="senha-container">
+
+<input
+type="password"
+id="senha"
+placeholder="Senha">
+
+<button
+type="button"
+onclick="mostrarSenha()">
+👁️
+</button>
+
+</div>
+
+<button onclick="fazerLogin()">
+Entrar
+</button>
+
+</div>
+
+</div>
+
+<div id="app">
 
 <header>
 
@@ -532,6 +723,18 @@ padding:20px;
 
 </select>
 
+<button id="btnFavoritos">
+⭐ Favoritos
+</button>
+
+<button id="btnTodos">
+🏠 Todos
+</button>
+
+<button onclick="logout()">
+🚪 Sair
+</button>
+
 </div>
 
 </header>
@@ -542,6 +745,8 @@ CARREGANDO POKÉMONS...
 
 <div class="container" id="pokemonContainer"></div>
 
+</div>
+
 <script>
 
 const container=document.getElementById("pokemonContainer");
@@ -549,7 +754,27 @@ const loading=document.getElementById("loading");
 const searchInput=document.getElementById("searchInput");
 const typeFilter=document.getElementById("typeFilter");
 
+window.onload=function(){
+
+const usuario=
+localStorage.getItem("usuario");
+
+if(usuario){
+
+document
+.getElementById("loginScreen")
+.style.display="none";
+
+document
+.getElementById("app")
+.style.display="block";
+
+}
+
+}
+
 let todosPokemons=[];
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
 const legendaryPokemons=[
 
@@ -673,6 +898,23 @@ card.style.border=`1px solid ${cor}`;
 card.style.boxShadow=`0 0 30px ${cor}55`;
 
 card.innerHTML=`
+
+<div style="
+display:flex;
+justify-content:flex-end;
+font-size:30px;
+cursor:pointer;
+">
+
+<span onclick="toggleFavorito(${pokemon.id})">
+
+${favoritos.includes(pokemon.id)
+? "❤️"
+: "🤍"}
+
+</span>
+
+</div>
 
 <div style="text-align:center;">
 
@@ -836,6 +1078,115 @@ renderizarPokemons(filtrados);
 
 }
 
+function toggleFavorito(id){
+
+if(favoritos.includes(id)){
+
+favoritos =
+favoritos.filter(
+pokemonId => pokemonId !== id
+);
+
+}else{
+
+favoritos.push(id);
+
+}
+
+localStorage.setItem(
+"favoritos",
+JSON.stringify(favoritos)
+);
+
+aplicarFiltros();
+
+}
+
+function mostrarFavoritos(){
+
+const lista =
+todosPokemons.filter(
+pokemon =>
+favoritos.includes(pokemon.id)
+);
+
+renderizarPokemons(lista);
+
+}
+
+function mostrarTodos(){
+
+renderizarPokemons(todosPokemons);
+
+}
+
+function mostrarSenha(){
+
+const campo =
+document.getElementById("senha");
+
+if(campo.type === "password"){
+
+campo.type = "text";
+
+}else{
+
+campo.type = "password";
+
+}
+
+}
+
+function logout(){
+
+localStorage.removeItem("usuario");
+
+document
+.getElementById("app")
+.style.display="none";
+
+document
+.getElementById("loginScreen")
+.style.display="flex";
+
+}
+
+function fazerLogin(){
+
+const usuario =
+document.getElementById("usuario").value;
+
+const senha =
+document.getElementById("senha").value;
+
+if(
+usuario === "" ||
+senha === ""
+){
+
+alert("Preencha usuário e senha");
+
+return;
+
+}
+
+localStorage.setItem(
+"usuario",
+usuario
+);
+
+alert("Bem-vindo(a), " + usuario + "!");
+
+document
+.getElementById("loginScreen")
+.style.display="none";
+
+document
+.getElementById("app")
+.style.display="block";
+
+}
+
 fetch("http://localhost:3000/pokemons")
 
 .then(response=>response.json())
@@ -864,6 +1215,20 @@ searchInput
 
 typeFilter
 .addEventListener("change",aplicarFiltros);
+
+document
+.getElementById("btnFavoritos")
+.addEventListener(
+"click",
+mostrarFavoritos
+);
+
+document
+.getElementById("btnTodos")
+.addEventListener(
+"click",
+mostrarTodos
+);
 
 </script>
 
